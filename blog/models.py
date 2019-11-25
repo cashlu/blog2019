@@ -3,6 +3,8 @@ from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 
+from taggit.managers import TaggableManager
+
 
 # 自定义模型管理器，返回所有状态为published的Post
 class PublishedManager(models.Manager):
@@ -30,6 +32,8 @@ class Post(models.Model):
     # 定义不同的管理器
     objects = models.Manager()
     published = PublishedManager()
+    # 将django-taggit提供的TaggableManager模型管理器加入到Post模型中。
+    tags = TaggableManager()
 
     class Meta:
         ordering = ('-publish',)
