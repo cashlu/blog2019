@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.generic import ListView
 from django.core.mail import send_mail
+from django.db.models import Count
 
 from taggit.models import Tag
 
@@ -59,11 +60,23 @@ def post_detail(request, year, month, day, post):
             new_comment.save()
     else:
         comment_form = CommentForm()
+
+    # 相似Tag的文章
+    # 选出当前文章的所有Tag的id。
+    # values_list()方法返回指定的字段的值构成的元组，通过指定flat=True，让其结果变成一个列表。
+    post_tags_ids = post.tags.values_list('id', flat=True)
+    # 选出具有相同tags的其他文章，排除当前文章，避免重复。
+    similar_tags = Post.published.filter(tags__in=post_tags_ids).exclude(id=post.id)
+    # 使用Count对每个文章按照标签计数，并生成一个新字段same_tags用于存放计数的结果。（models中定义了tags的管理器）
+    # 按照相同标签的数量，降序排列结果，然后截取前四个结果作为最终传入模板的数据对象。
+    similar_posts = similar_tags.annotate(same_tags=Count('tags')).order_by('-same_tags', '-publish')[:4]
+
     # 这里有bug，如果提交表单后，只是渲染原页面，那么刷新页面，表单会重复提交，
     # 解决的办法是提交后跳转到相应的detail页。
     return render(request, 'blog/post/detail.html',
                   {'post': post, 'comments': comments,
-                   'new_comment': new_comment, 'comment_form': comment_form})
+                   'new_comment': new_comment, 'comment_form': comment_form,
+                   'similar_posts': similar_posts})
 
 
 class PostListView(ListView):
