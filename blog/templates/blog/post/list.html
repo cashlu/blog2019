@@ -15,5 +15,7 @@
         </p>
         {{ post.body|truncatewords:30|linebreaks }}
     {% endfor %}
-
+    {#由于视图传递给列表页的Page对象的名称叫做posts，#}
+    {#所以通过with重新指定了变量名称以让分页模板也能正确接收到该对象。#}
+    {% include 'blog/pagination.html' with page=posts %}
 {% endblock %}

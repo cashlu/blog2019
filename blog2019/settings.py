@@ -133,3 +133,12 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Email发送相关
+# EMAIL_HOST = ''
+# EMAIL_HOST_USER = ''
+# EMAIL_HOST_PASSWORD = ''
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# 不使用真实的Email邮件服务发送，用于测试，只是在控制台打印即可。
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
