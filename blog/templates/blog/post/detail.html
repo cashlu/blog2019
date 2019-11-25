@@ -1,4 +1,6 @@
 {% extends 'blog/base.html' %}
+{% load blog_tags %}
+
 {% block title %}
     {{ post.title }}
 {% endblock %}
@@ -28,7 +30,7 @@
                 {# forloop.counter可以在循环中计数，相当于当前评论的编号。 #}
                 Comment {{ forloop.counter }} by {{ comment.name }}
             </p>
-            {{ comment.body|linebreaks }}
+            {{ comment.body|markdown }}
         </div>
     {% empty %}
         <p>There are no comments yet.</p>
