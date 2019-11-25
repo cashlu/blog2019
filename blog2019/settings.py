@@ -38,6 +38,9 @@ INSTALLED_APPS = [
     'blog.apps.BlogConfig',
     # django-taggit
     'taggit',
+    # 站点地图
+    'django.contrib.sites',
+    'django.contrib.sitemaps',
 ]
 
 MIDDLEWARE = [
@@ -144,3 +147,5 @@ STATIC_URL = '/static/'
 # EMAIL_USE_TLS = True
 # 不使用真实的Email邮件服务发送，用于测试，只是在控制台打印即可。
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+SITE_ID = 1
